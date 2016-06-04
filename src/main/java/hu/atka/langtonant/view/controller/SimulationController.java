@@ -8,12 +8,16 @@ import hu.atka.langtonant.controller.Simulation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -23,13 +27,21 @@ public class SimulationController implements Initializable {
 	Canvas canvasSim;
 	@FXML
 	Button buttonStart;
+	@FXML
+	Slider sliderSpeed;
+	@FXML
+	Label labelSpeed;
 
 	Timeline timeline;
+	int speed;
 	GraphicsContext gcSimulation;
 	Simulation simulation;
 
 	@FXML
 	private void handleButtonStart(ActionEvent event) {
+		// simulation = new Simulation(300, new RuleSet(true, false));
+		simulation = new Simulation(300,
+				new RuleSet(true, true, true, false, true, false, false, true, true, true, true, true));
 		clearAll();
 		timeline.play();
 	}
@@ -92,11 +104,21 @@ public class SimulationController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		simulation = new Simulation(300, new RuleSet(true, false));
+		sliderSpeed.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				speed = new_val.intValue();
+				labelSpeed.setText("Speed: " + speed);
+			}
+		});
+
+		speed = 1;
+		labelSpeed.setText("Speed: " + speed);
 		gcSimulation = canvasSim.getGraphicsContext2D();
 		clearAll();
 		timeline = new Timeline(new KeyFrame(Duration.millis(10), ae -> {
-			simulation.tick();
+			for (int i = 0; i < speed; i++) {
+				simulation.tick();
+			}
 			render();
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
