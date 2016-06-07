@@ -14,7 +14,6 @@ public class Direction {
 			direction += 3;
 		}
 		direction = direction % 4;
-		rule.counter++;
 	}
 
 	public int getDirection() {

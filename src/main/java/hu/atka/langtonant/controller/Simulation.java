@@ -11,8 +11,11 @@ public class Simulation {
 		ant = new Ant(size / 2, size / 2);
 	}
 
-	public void tick() {
+	public void tick() throws AntOutOfMapException {
 		ant.move(ruleSet.getRule(map[ant.getY()][ant.getX()]));
+		if (ant.getX() < 0 || ant.getY() < 0 || ant.getX() >= map[0].length || ant.getY() >= map.length) {
+			throw new AntOutOfMapException("Ant's coordinates are out of the map");
+		}
 		map[ant.getY()][ant.getX()] = (map[ant.getY()][ant.getX()] + 1) % ruleSet.getRuleSetSize();
 	}
 

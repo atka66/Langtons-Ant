@@ -2,7 +2,9 @@ package hu.atka.langtonant.view.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import hu.atka.langtonant.controller.Rule;
 import hu.atka.langtonant.controller.RuleSet;
 import hu.atka.langtonant.controller.Simulation;
 import javafx.animation.Animation;
@@ -17,6 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -31,6 +34,14 @@ public class SimulationController implements Initializable {
 	Slider sliderSpeed;
 	@FXML
 	Label labelSpeed;
+	@FXML
+	Button buttonAddLeft;
+	@FXML
+	Button buttonAddRight;
+	@FXML
+	Button buttonDelete;
+	@FXML
+	ListView<Rule> listViewRuleSet;
 
 	Timeline timeline;
 	int speed;
@@ -39,11 +50,24 @@ public class SimulationController implements Initializable {
 
 	@FXML
 	private void handleButtonStart(ActionEvent event) {
-		// simulation = new Simulation(300, new RuleSet(true, false));
-		simulation = new Simulation(300,
-				new RuleSet(true, true, true, false, true, false, false, true, true, true, true, true));
+		simulation = new Simulation(400, new RuleSet(listViewRuleSet.getItems().stream().collect(Collectors.toList())));
 		clearAll();
 		timeline.play();
+	}
+
+	@FXML
+	private void handleButtonAddLeft(ActionEvent event) {
+		listViewRuleSet.getItems().add(new Rule(false));
+	}
+
+	@FXML
+	private void handleButtonAddRight(ActionEvent event) {
+		listViewRuleSet.getItems().add(new Rule(true));
+	}
+
+	@FXML
+	private void handleButtonDelete(ActionEvent event) {
+		listViewRuleSet.getItems().remove(listViewRuleSet.getSelectionModel().getSelectedItem());
 	}
 
 	private void clearAll() {
@@ -52,30 +76,10 @@ public class SimulationController implements Initializable {
 	}
 
 	private Color getColorFromBlock(int block) {
-		switch (block) {
-		case 0:
-			return Color.WHITE;
-		case 1:
-			return Color.RED;
-		case 2:
-			return Color.GREEN;
-		case 3:
-			return Color.BLUE;
-		case 4:
-			return Color.YELLOW;
-		case 5:
-			return Color.PURPLE;
-		case 6:
-			return Color.CYAN;
-		case 7:
-			return Color.DARKRED;
-		case 8:
-			return Color.DARKGREEN;
-		case 9:
-			return Color.DARKBLUE;
-		default:
-			return Color.WHITE;
+		if (block < 10) {
+			return Constants.COLOR_RULES[block - 1];
 		}
+		return Constants.COLOR_RULE_DEFAULT;
 	}
 
 	private void renderMap() {
@@ -117,7 +121,11 @@ public class SimulationController implements Initializable {
 		clearAll();
 		timeline = new Timeline(new KeyFrame(Duration.millis(10), ae -> {
 			for (int i = 0; i < speed; i++) {
-				simulation.tick();
+				try {
+					simulation.tick();
+				} catch (Exception e) {
+					timeline.stop();
+				}
 			}
 			render();
 		}));

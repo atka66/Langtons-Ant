@@ -13,8 +13,16 @@ public class RuleSet {
 		}
 	}
 	
+	public RuleSet(List<Rule> rules) {
+		this.rules = rules;
+	}
+	
 	public Rule getRule(int index) {
 		return rules.get(index);
+	}
+	
+	public List<Rule> getRuleSet() {
+		return rules;
 	}
 
 	public int getRuleSetSize() {
