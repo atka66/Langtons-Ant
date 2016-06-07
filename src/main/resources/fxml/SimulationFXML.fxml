@@ -13,12 +13,14 @@
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.atka.langtonant.view.controller.SimulationController">
 	<children>
 		<Canvas fx:id="canvasSim" height="400.0" layoutX="40.0" layoutY="40.0" width="400.0" />
-		<Button fx:id="buttonStart" layoutX="493.0" layoutY="415.0" mnemonicParsing="false" onAction="#handleButtonStart" text="Start Simulation" />
-		<Slider fx:id="sliderSpeed" blockIncrement="1000.0" layoutX="473.0" layoutY="72.0" majorTickUnit="2500.0" max="5000.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" />
-		<Label fx:id="labelSpeed" layoutX="473.0" layoutY="40.0" text="Speed: " />
-      <ListView fx:id="listViewRuleSet" layoutX="473.0" layoutY="140.0" prefHeight="200.0" prefWidth="140.0" />
-      <Button fx:id="buttonAddLeft" layoutX="473.0" layoutY="340.0" mnemonicParsing="false" onAction="#handleButtonAddLeft" prefWidth="70.0" text="+Left" />
-      <Button fx:id="buttonAddRight" layoutX="543.0" layoutY="340.0" mnemonicParsing="false" onAction="#handleButtonAddRight" prefWidth="70.0" text="+Right" />
-      <Button fx:id="buttonDelete" layoutX="473.0" layoutY="365.0" mnemonicParsing="false" onAction="#handleButtonDelete" prefHeight="25.0" prefWidth="140.0" text="Delete selection" />
+		<Button fx:id="buttonStart" layoutX="493.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleButtonStart" text="Start Simulation" />
+		<Slider fx:id="sliderSpeed" blockIncrement="1000.0" layoutX="474.0" layoutY="59.0" majorTickUnit="2500.0" max="5000.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" />
+		<Label fx:id="labelSpeed" layoutX="474.0" layoutY="32.0" text="Speed: " />
+      <ListView fx:id="listViewRuleSet" layoutX="474.0" layoutY="127.0" prefHeight="200.0" prefWidth="140.0" />
+      <Button fx:id="buttonAddLeft" layoutX="474.0" layoutY="327.0" mnemonicParsing="false" onAction="#handleButtonAddLeft" prefWidth="70.0" text="+Left" />
+      <Button fx:id="buttonAddRight" layoutX="544.0" layoutY="327.0" mnemonicParsing="false" onAction="#handleButtonAddRight" prefWidth="70.0" text="+Right" />
+      <Button fx:id="buttonDelete" layoutX="474.0" layoutY="352.0" mnemonicParsing="false" onAction="#handleButtonDelete" prefHeight="25.0" prefWidth="140.0" text="Delete selection" />
+      <Label layoutX="523.0" layoutY="110.0" text="Ruleset:" />
+      <Button fx:id="buttonStop" layoutX="493.0" layoutY="423.0" mnemonicParsing="false" onAction="#handleButtonStop" text="Stop Simulation" />
 	</children>
 </AnchorPane>

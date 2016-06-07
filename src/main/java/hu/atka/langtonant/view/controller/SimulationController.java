@@ -29,11 +29,13 @@ public class SimulationController implements Initializable {
 	@FXML
 	Canvas canvasSim;
 	@FXML
-	Button buttonStart;
-	@FXML
 	Slider sliderSpeed;
 	@FXML
 	Label labelSpeed;
+	@FXML
+	Button buttonStart;
+	@FXML
+	Button buttonStop;
 	@FXML
 	Button buttonAddLeft;
 	@FXML
@@ -53,6 +55,11 @@ public class SimulationController implements Initializable {
 		simulation = new Simulation(400, new RuleSet(listViewRuleSet.getItems().stream().collect(Collectors.toList())));
 		clearAll();
 		timeline.play();
+	}
+	
+	@FXML
+	private void handleButtonStop(ActionEvent event) {
+		timeline.stop();
 	}
 
 	@FXML
@@ -76,8 +83,8 @@ public class SimulationController implements Initializable {
 	}
 
 	private Color getColorFromBlock(int block) {
-		if (block < 10) {
-			return Constants.COLOR_RULES[block - 1];
+		if (block < Constants.COLOR_RULES.length) {
+			return Constants.COLOR_RULES[block];
 		}
 		return Constants.COLOR_RULE_DEFAULT;
 	}
