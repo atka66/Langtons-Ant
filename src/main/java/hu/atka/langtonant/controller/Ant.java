@@ -10,13 +10,12 @@ public class Ant {
 		this.x = x;
 		this.y = y;
 	}
-
-	public void move(Rule rule) {
+	
+	public void turn(Rule rule) {
 		direction.turn(rule);
-		step();
 	}
 
-	private void step() {
+	public void move() {
 		switch (direction.getDirection()) {
 		case 0:
 			y++;

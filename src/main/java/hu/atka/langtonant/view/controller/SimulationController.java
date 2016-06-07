@@ -43,6 +43,8 @@ public class SimulationController implements Initializable {
 	@FXML
 	Button buttonDelete;
 	@FXML
+	Button buttonClear;
+	@FXML
 	ListView<Rule> listViewRuleSet;
 
 	Timeline timeline;
@@ -56,7 +58,7 @@ public class SimulationController implements Initializable {
 		clearAll();
 		timeline.play();
 	}
-	
+
 	@FXML
 	private void handleButtonStop(ActionEvent event) {
 		timeline.stop();
@@ -75,6 +77,11 @@ public class SimulationController implements Initializable {
 	@FXML
 	private void handleButtonDelete(ActionEvent event) {
 		listViewRuleSet.getItems().remove(listViewRuleSet.getSelectionModel().getSelectedItem());
+	}
+
+	@FXML
+	private void handleButtonClear(ActionEvent event) {
+		listViewRuleSet.getItems().clear();
 	}
 
 	private void clearAll() {
