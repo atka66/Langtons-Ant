@@ -2,15 +2,14 @@ package hu.atka.langtonant.view.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import hu.atka.langtonant.controller.Rule;
 import hu.atka.langtonant.controller.RuleSet;
 import hu.atka.langtonant.controller.Simulation;
+import hu.atka.langtonant.model.entity.RuleVo;
 import hu.atka.langtonant.model.service.RuleService;
 import hu.atka.langtonant.model.service.RuleServiceImpl;
 import javafx.animation.Animation;
@@ -25,8 +24,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -43,29 +42,37 @@ public class SimulationController implements Initializable {
 	@FXML
 	Button buttonStop;
 	@FXML
-	Button buttonAddLeft;
+	Button buttonLoad;
 	@FXML
-	Button buttonAddRight;
-	@FXML
-	Button buttonDelete;
-	@FXML
-	Button buttonClear;
-	@FXML
-	ListView<Rule> listViewRuleSet;
+	TextArea textAreaRuleset;
 
 	private Timeline timeline;
 	private int speed;
 	private GraphicsContext gcSimulation;
 	private Simulation simulation;
 
-	private EntityManagerFactory entityManagerFactory;
-	private EntityManager entityManager;
-
 	@FXML
 	private void handleButtonStart(ActionEvent event) {
-		simulation = new Simulation(400, new RuleSet(listViewRuleSet.getItems().stream().collect(Collectors.toList())));
-		clearAll();
-		timeline.play();
+		String text = textAreaRuleset.getText();
+		if (checkIfValidRuleset(text)) {
+			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("RuleDB");
+			EntityManager entityManager = entityManagerFactory.createEntityManager();
+			try {
+				RuleService ruleService = new RuleServiceImpl(entityManager);
+				entityManager.getTransaction().begin();
+				ruleService.add(new RuleVo(text));
+				entityManager.getTransaction().commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				entityManager.close();
+				entityManagerFactory.close();
+			}
+
+			simulation = new Simulation(400, new RuleSet(text));
+			clearAll();
+			timeline.play();
+		}
 	}
 
 	@FXML
@@ -74,23 +81,12 @@ public class SimulationController implements Initializable {
 	}
 
 	@FXML
-	private void handleButtonAddLeft(ActionEvent event) {
-		listViewRuleSet.getItems().add(new Rule(false));
+	private void handleButtonLoad(ActionEvent event) {
+		// TODO
 	}
 
-	@FXML
-	private void handleButtonAddRight(ActionEvent event) {
-		listViewRuleSet.getItems().add(new Rule(true));
-	}
-
-	@FXML
-	private void handleButtonDelete(ActionEvent event) {
-		listViewRuleSet.getItems().remove(listViewRuleSet.getSelectionModel().getSelectedItem());
-	}
-
-	@FXML
-	private void handleButtonClear(ActionEvent event) {
-		listViewRuleSet.getItems().clear();
+	private boolean checkIfValidRuleset(String string) {
+		return string.toUpperCase().matches("[LR]+");
 	}
 
 	private void clearAll() {
@@ -131,19 +127,12 @@ public class SimulationController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		entityManagerFactory = Persistence.createEntityManagerFactory("RuleDB");
-		entityManager = entityManagerFactory.createEntityManager();
-		// TEST TODO
-		RuleService ruleService = new RuleServiceImpl(entityManager);
-		ruleService.getAll();
-
 		sliderSpeed.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				speed = new_val.intValue();
 				labelSpeed.setText("Speed: " + speed);
 			}
 		});
-
 		speed = 1;
 		labelSpeed.setText("Speed: " + speed);
 		gcSimulation = canvasSim.getGraphicsContext2D();

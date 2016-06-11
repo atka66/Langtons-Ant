@@ -6,10 +6,14 @@ import java.util.List;
 public class RuleSet {
 	private List<Rule> rules;
 
-	public RuleSet(boolean... ruleIsRights) {
+	public RuleSet(String string) {
 		rules = new ArrayList<>();
-		for (boolean ruleIsRight : ruleIsRights) {
-			rules.add(new Rule(ruleIsRight));
+		for (char c : string.toUpperCase().toCharArray()) {
+			if (c != 'R' && c != 'L') {
+				rules.clear();
+				break;
+			}
+			rules.add(new Rule(c == 'R' ? true : false));
 		}
 	}
 	
