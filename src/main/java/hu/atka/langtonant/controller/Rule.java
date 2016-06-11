@@ -1,9 +1,17 @@
 package hu.atka.langtonant.controller;
 
 public class Rule {
-	public boolean turnRight;
+	private boolean turnRight;
 
 	public Rule(boolean turnRight) {
+		this.turnRight = turnRight;
+	}
+
+	public boolean isTurnRight() {
+		return turnRight;
+	}
+
+	public void setTurnRight(boolean turnRight) {
 		this.turnRight = turnRight;
 	}
 

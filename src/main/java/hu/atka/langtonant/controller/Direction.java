@@ -8,7 +8,7 @@ public class Direction {
 	}
 
 	public void turn(Rule rule) {
-		if (rule.turnRight) {
+		if (rule.isTurnRight()) {
 			direction += 5;
 		} else {
 			direction += 3;

@@ -4,9 +4,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import hu.atka.langtonant.controller.Rule;
 import hu.atka.langtonant.controller.RuleSet;
 import hu.atka.langtonant.controller.Simulation;
+import hu.atka.langtonant.model.service.RuleService;
+import hu.atka.langtonant.model.service.RuleServiceImpl;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -47,10 +53,13 @@ public class SimulationController implements Initializable {
 	@FXML
 	ListView<Rule> listViewRuleSet;
 
-	Timeline timeline;
-	int speed;
-	GraphicsContext gcSimulation;
-	Simulation simulation;
+	private Timeline timeline;
+	private int speed;
+	private GraphicsContext gcSimulation;
+	private Simulation simulation;
+
+	private EntityManagerFactory entityManagerFactory;
+	private EntityManager entityManager;
 
 	@FXML
 	private void handleButtonStart(ActionEvent event) {
@@ -122,6 +131,12 @@ public class SimulationController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		entityManagerFactory = Persistence.createEntityManagerFactory("RuleDB");
+		entityManager = entityManagerFactory.createEntityManager();
+		// TEST TODO
+		RuleService ruleService = new RuleServiceImpl(entityManager);
+		ruleService.getAll();
+
 		sliderSpeed.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				speed = new_val.intValue();
